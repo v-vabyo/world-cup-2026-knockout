@@ -977,8 +977,9 @@
 
           advanceTeam(sourceNode);
           
-          // Wait for the CSS flying animation (400ms) + small buffer to finish
-          await new Promise(r => setTimeout(r, 600));
+          // Wait for the CSS flying animation (700-800ms) + small buffer to finish
+          // This MUST be > 800ms, otherwise the state isn't updated in time for the next round!
+          await new Promise(r => setTimeout(r, 850));
         }
       };
 
@@ -994,7 +995,7 @@
       
       // For Final, wait a bit longer to enjoy the confetti
       await simulateRound(F_BRACKET, 4, state.picks.f, getSFWinner);
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 1000));
 
       showToast("Simulasi selesai!");
     }
