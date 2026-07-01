@@ -867,8 +867,8 @@
 
     const fetchAPI = async () => {
       try {
-        const window30s = Math.floor(Date.now() / 30000);
-        const url = '/api/matches?t=' + window30s;
+        const window10s = Math.floor(Date.now() / 10000);
+        const url = '/api/matches?t=' + window10s;
         const response = await fetch(url);
         const data = await response.json();
         
@@ -999,9 +999,9 @@
       }
     };
     
-    // Fetch immediately, then every 30 seconds
+    // Fetch immediately, then every 10 seconds
     fetchAPI();
-    setInterval(fetchAPI, 30000);
+    setInterval(fetchAPI, 10000);
     
     document.addEventListener("visibilitychange", () => {
        if (document.visibilityState === "visible") fetchAPI();
