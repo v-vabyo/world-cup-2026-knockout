@@ -879,20 +879,34 @@
         
         knockout.forEach(apiMatch => {
           if (!apiMatch.homeTeam || !apiMatch.awayTeam) return;
-          const apiHome = apiMatch.homeTeam.tla;
-          const apiAway = apiMatch.awayTeam.tla;
+          const apiHomeTLA = apiMatch.homeTeam.tla || "";
+          const apiAwayTLA = apiMatch.awayTeam.tla || "";
+          const apiHomeName = (apiMatch.homeTeam.name || "").toLowerCase();
+          const apiAwayName = (apiMatch.awayTeam.name || "").toLowerCase();
           
-          if (!apiHome || !apiAway) return;
+          if (!apiHomeTLA && !apiHomeName) return;
           
           const matchData = activeMatches.find(am => {
              const t1Arr = mapToApiTLA(am.team1);
              const t2Arr = mapToApiTLA(am.team2);
-             return (t1Arr.includes(apiHome) && t2Arr.includes(apiAway)) || (t1Arr.includes(apiAway) && t2Arr.includes(apiHome));
+             const n1 = TEAMS[am.team1]?.name.toLowerCase() || "";
+             const n2 = TEAMS[am.team2]?.name.toLowerCase() || "";
+             
+             // Match by TLA or Name
+             const t1MatchesHome = t1Arr.includes(apiHomeTLA) || (apiHomeName && (apiHomeName.includes(n1) || n1.includes(apiHomeName)));
+             const t2MatchesAway = t2Arr.includes(apiAwayTLA) || (apiAwayName && (apiAwayName.includes(n2) || n2.includes(apiAwayName)));
+             
+             const t1MatchesAway = t1Arr.includes(apiAwayTLA) || (apiAwayName && (apiAwayName.includes(n1) || n1.includes(apiAwayName)));
+             const t2MatchesHome = t2Arr.includes(apiHomeTLA) || (apiHomeName && (apiHomeName.includes(n2) || n2.includes(apiHomeName)));
+             
+             return (t1MatchesHome && t2MatchesAway) || (t1MatchesAway && t2MatchesHome);
           });
           
           if (matchData) {
              const m = matchData.orig;
-             const isHomeT1 = mapToApiTLA(matchData.team1).includes(apiHome);
+             const n1 = TEAMS[matchData.team1]?.name.toLowerCase() || "";
+             const t1Arr = mapToApiTLA(matchData.team1);
+             const isHomeT1 = t1Arr.includes(apiHomeTLA) || (apiHomeName && (apiHomeName.includes(n1) || n1.includes(apiHomeName)));
              
              let newStatus = "upcoming";
              if (apiMatch.status === "IN_PLAY" || apiMatch.status === "PAUSED") newStatus = "live";
@@ -972,6 +986,7 @@
         }
       } catch (err) {
         console.warn("API Fetch Error:", err);
+        showToast("⚠️ Vercel API Error: Pastikan API Key tersimpan di Vercel, dan Repo tersinkronisasi!");
       }
     };
     
