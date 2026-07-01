@@ -514,13 +514,20 @@ body {
     --node-size-f: 22px;
   }
   
+  body {
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   .layout-container {
     flex-direction: column;
     justify-content: flex-start;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
     width: 100%;
-    padding-bottom: 40px; /* Some padding at the bottom of the page */
+    padding-bottom: 40px;
   }
   
   .sidebar {
