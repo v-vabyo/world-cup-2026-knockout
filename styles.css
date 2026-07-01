@@ -575,8 +575,9 @@ body {
   }
   
   .sidebar__header {
-    flex: 1;
-    min-width: 60%;
+    flex: 1 1 100%;
+    min-width: 100%;
+    margin-bottom: 12px;
   }
 
   .sidebar__title {

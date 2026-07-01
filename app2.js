@@ -388,8 +388,10 @@
     graph.nodes.forEach(n => {
       const el = createNodeEl(n);
       if (n.ring === 5) {
+        // Position exactly in the center bottom below trophy
+        const offset = window.innerWidth <= 768 ? 45 : 60;
         el.style.left = cx + "px";
-        el.style.top = (cy + 60) + "px";
+        el.style.top = (cy + offset) + "px";
       } else {
         const pos = posOnCircle(cx, cy, radii[n.ring], n.angle);
         el.style.left = pos.x + "px";
