@@ -9,8 +9,8 @@ A breathtaking, fully interactive, and radial knockout phase bracket built speci
 - **🎲 Smart Simulation Engine:** A built-in simulator that predicts match outcomes based on realistic team strengths (ratings). Not only does it pick winners, but it also generates realistic football scores (e.g., 2-1, 3-0, or even penalty shootouts like 1-1 p(5-4)).
 - **🚀 Stunning Animations:** Click any team or run the simulation to watch the flags literally "fly" across the screen, advancing to the next round with smooth CSS transitions.
 - **📱 Fully Responsive:** Carefully crafted to look gorgeous on both ultra-wide desktops and mobile screens.
-- **📊 Live Match Panel:** Hover over or click on any node to reveal a dynamic side panel showing real-time match details and scores.
-
+- **📊 Auto-Pinning Live Panel:** The system intelligently scans for real-time matches (`IN_PLAY` or `LIVE`) and automatically pins them to the corner of your screen with a pulsing red indicator. If no match is live, it gracefully falls back to the most recently finished match.
+- **✨ Active Frontier UI:** As the tournament progresses and teams advance, the UI dynamically fades out flags from past rounds, ensuring your eyes are always drawn to the bright, active frontier of the current knockout stage.
 ## 🛠️ Technology Stack
 
 - **Frontend:** Vanilla HTML5, CSS3, and JavaScript (ES6+). Zero heavy frameworks, ensuring blazing-fast performance.
