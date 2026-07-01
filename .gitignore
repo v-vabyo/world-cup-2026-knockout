@@ -1,0 +1,8 @@
+node_modules/
+test_*.html
+worldcup-trophy.png
+proxy.js
+scrape.js
+api_test.json
+package.json
+package-lock.json

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA World Cup 2026 — Knockout Phase</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+  <link rel="stylesheet" href="styles.css?v=28" />
+</head>
+<body>
+  
+  <div class="layout-container">
+    <!-- Live Match Panel -->
+    <div id="live-panel" class="live-panel hidden">
+      <div class="live-panel__header">
+        <span class="live-indicator"></span> <span id="live-panel-title">LIVE MATCH</span>
+      </div>
+      <div class="live-panel__content">
+        <div class="live-team">
+          <img id="live-flag1" src="" alt="Flag" class="live-flag" />
+          <span id="live-name1" class="live-team-name">-</span>
+          <span id="live-score1" class="live-score-number">-</span>
+        </div>
+        <div class="live-divider">
+          <span id="live-match-status" class="live-status-text">IN PLAY</span>
+        </div>
+        <div class="live-team">
+          <img id="live-flag2" src="" alt="Flag" class="live-flag" />
+          <span id="live-name2" class="live-team-name">-</span>
+          <span id="live-score2" class="live-score-number">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <h1 class="sidebar__title">World Cup 2026</h1>
+        <h2 class="sidebar__subtitle">Knockout Phase</h2>
+        <p class="sidebar__desc">Interactive visualization based on an original design.</p>
+      </div>
+      
+      <div class="sidebar__actions">
+        <button class="btn btn--outline" id="btn-share">Share</button>
+        <button class="btn btn--outline" id="btn-reset">Reset</button>
+      </div>
+
+      <div class="sidebar__footer">
+        @paul_ux (inspired)
+      </div>
+    </aside>
+
+    <!-- Arena -->
+    <main class="arena-wrap">
+      <div class="arena" id="arena">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Highlight Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  <script src="data.js?v=58"></script>
+  <script src="app2.js?v=58"></script>
+</body>
+</html>
