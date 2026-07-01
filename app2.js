@@ -331,6 +331,7 @@
       size * 0.30, // QF  (2)
       size * 0.22, // SF  (3)
       size * 0.13, // F   (4)
+      0            // Champ (5)
     ];
 
     currentGraph = buildNodesAndEdges();
