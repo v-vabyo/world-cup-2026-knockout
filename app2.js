@@ -15,7 +15,8 @@
       qf: {},
       sf: {},
       f: {}
-    }
+    },
+    simScores: {} // matchId -> {t1Score, t2Score, pen1, pen2}
   };
 
   let currentGraph = null;
@@ -68,8 +69,13 @@
         angle1 = 5.625 + (j * 2) * 11.25;
         angle2 = 5.625 + (j * 2 + 1) * 11.25;
       }
-      const n1 = { id: `${m.id}_t1`, matchId: m.id, round: "r32", team: m.team1, angle: angle1, ring: 0, status: m.status, score: m.score1, penScore: m.penaltyScore1, isLive: m.status === 'live', side: 1 };
-      const n2 = { id: `${m.id}_t2`, matchId: m.id, round: "r32", team: m.team2, angle: angle2, ring: 0, status: m.status, score: m.score2, penScore: m.penaltyScore2, isLive: m.status === 'live', side: 2 };
+      let s1 = m.score1, s2 = m.score2, p1 = m.penaltyScore1, p2 = m.penaltyScore2;
+      if (state.simScores[m.id]) {
+         s1 = state.simScores[m.id].t1Score; s2 = state.simScores[m.id].t2Score;
+         p1 = state.simScores[m.id].pen1; p2 = state.simScores[m.id].pen2;
+      }
+      const n1 = { id: `${m.id}_t1`, matchId: m.id, round: "r32", team: m.team1, angle: angle1, ring: 0, status: m.status, score: s1, penScore: p1, isLive: m.status === 'live', side: 1 };
+      const n2 = { id: `${m.id}_t2`, matchId: m.id, round: "r32", team: m.team2, angle: angle2, ring: 0, status: m.status, score: s2, penScore: p2, isLive: m.status === 'live', side: 2 };
       nodes.push(n1, n2);
       ring0.push({ m, n1, n2 });
     });
@@ -98,12 +104,20 @@
     R16_BRACKET.forEach((m, i) => {
       const f1 = ring1.find(x => x.m.id === m.feedFrom[0]);
       const f2 = ring1.find(x => x.m.id === m.feedFrom[1]);
-      const angle = (f1.angle + f2.angle) / 2;
+      
+      if (f1 && f2 && state.simScores[m.id]) {
+         f1.node.score = state.simScores[m.id].t1Score;
+         f2.node.score = state.simScores[m.id].t2Score;
+         f1.node.penScore = state.simScores[m.id].pen1;
+         f2.node.penScore = state.simScores[m.id].pen2;
+      }
+      
+      const angle = (f1?.angle + f2?.angle) / 2;
       const winner = state.picks.r16[m.id];
       
       if (winner) {
-        if (f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-        if (f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+        if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
+        if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
       }
 
       const n = { id: `${m.id}_w`, matchId: m.id, round: "r16", isTarget: true, team: winner, angle, ring: 2, t1: f1.winner, t2: f2.winner };
@@ -119,12 +133,20 @@
     QF_BRACKET.forEach((m, i) => {
       const f1 = ring2.find(x => x.m.id === m.feedFrom[0]);
       const f2 = ring2.find(x => x.m.id === m.feedFrom[1]);
-      const angle = (f1.angle + f2.angle) / 2;
+      
+      if (f1 && f2 && state.simScores[m.id]) {
+         f1.node.score = state.simScores[m.id].t1Score;
+         f2.node.score = state.simScores[m.id].t2Score;
+         f1.node.penScore = state.simScores[m.id].pen1;
+         f2.node.penScore = state.simScores[m.id].pen2;
+      }
+      
+      const angle = (f1?.angle + f2?.angle) / 2;
       const winner = state.picks.qf[m.id];
 
       if (winner) {
-        if (f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-        if (f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+        if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
+        if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
       }
 
       const n = { id: `${m.id}_w`, matchId: m.id, round: "qf", isTarget: true, team: winner, angle, ring: 3, t1: f1.winner, t2: f2.winner };
@@ -141,12 +163,20 @@
       SF_BRACKET.forEach((m, i) => {
         const f1 = ring3.find(x => x.m.id === m.feedFrom[0]);
         const f2 = ring3.find(x => x.m.id === m.feedFrom[1]);
-        const angle = (f1.angle + f2.angle) / 2;
+        
+        if (f1 && f2 && state.simScores[m.id]) {
+           f1.node.score = state.simScores[m.id].t1Score;
+           f2.node.score = state.simScores[m.id].t2Score;
+           f1.node.penScore = state.simScores[m.id].pen1;
+           f2.node.penScore = state.simScores[m.id].pen2;
+        }
+        
+        const angle = (f1?.angle + f2?.angle) / 2;
         const winner = state.picks.sf[m.id];
 
         if (winner) {
-          if (f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-          if (f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+          if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
+          if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
         }
 
         const n = { id: `${m.id}_w`, matchId: m.id, round: "sf", isTarget: true, team: winner, angle, ring: 4, t1: f1.winner, t2: f2.winner };
@@ -164,6 +194,13 @@
         const f1 = ring4.find(x => x.m.id === m.feedFrom[0]);
         const f2 = ring4.find(x => x.m.id === m.feedFrom[1]);
         if(!f1 || !f2) return;
+        
+        if (state.simScores[m.id]) {
+           f1.node.score = state.simScores[m.id].t1Score;
+           f2.node.score = state.simScores[m.id].t2Score;
+           f1.node.penScore = state.simScores[m.id].pen1;
+           f2.node.penScore = state.simScores[m.id].pen2;
+        }
         
         let angle = (f1.angle + f2.angle) / 2;
         if (Math.abs(f1.angle - f2.angle) > 180) {
@@ -930,6 +967,7 @@
 
     document.getElementById("btn-reset")?.addEventListener("click", () => {
       state.picks = { r32: {}, r16: {}, qf: {}, sf: {}, f: {} };
+      state.simScores = {};
       buildBracket();
       showToast("Bracket reset!");
     });
@@ -949,7 +987,25 @@
       probA = Math.max(0.15, Math.min(0.85, probA));
       
       const random = Math.random();
-      return random <= probA ? teamA : teamB;
+      const winner = random <= probA ? teamA : teamB;
+      
+      let scoreW = Math.floor(Math.random() * 3) + 1; // 1, 2, 3
+      let scoreL = Math.floor(Math.random() * scoreW); // 0 to scoreW-1
+
+      let penW, penL;
+      if (Math.random() < 0.15) { // 15% chance of penalties
+         scoreW = Math.floor(Math.random() * 3); // 0, 1, 2
+         scoreL = scoreW; // Draw
+         penW = Math.floor(Math.random() * 2) + 4; // 4, 5
+         penL = penW - 1 - Math.floor(Math.random() * 2); // 2, 3, 4
+      }
+
+      const score1 = winner === teamA ? scoreW : scoreL;
+      const score2 = winner === teamA ? scoreL : scoreW;
+      const pen1 = winner === teamA ? penW : penL;
+      const pen2 = winner === teamA ? penL : penW;
+
+      return { winner, score1, score2, pen1, pen2 };
     }
 
     async function runSimulation() {
@@ -969,7 +1025,10 @@
 
           if (!team1 || !team2) continue; // Waiting for previous rounds
 
-          const winner = calculateWinner(team1, team2);
+          const result = calculateWinner(team1, team2);
+          const winner = result.winner;
+          
+          state.simScores[match.id] = { t1Score: result.score1, t2Score: result.score2, pen1: result.pen1, pen2: result.pen2 };
 
           // Find the node in the UI and click it programmatically
           const sourceNode = currentGraph.nodes.find(n => n.ring === currentRing && n.team === winner);
