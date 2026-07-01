@@ -87,8 +87,8 @@
       const winner = m.winner || state.picks.r32[m.id];
       
       if (winner) {
-        if (n1.team && n1.team !== winner) n1.isLoser = true;
-        if (n2.team && n2.team !== winner) n2.isLoser = true;
+        if (n1.team) n1.isLoser = true;
+        if (n2.team) n2.isLoser = true;
       }
 
       const n = { id: `${m.id}_w`, matchId: m.id, round: "r32", isTarget: true, team: winner, angle, ring: 1, t1: m.team1, t2: m.team2 };
@@ -116,8 +116,8 @@
       const winner = state.picks.r16[m.id];
       
       if (winner) {
-        if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-        if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+        if (f1 && f1.node && f1.node.team) f1.node.isLoser = true;
+        if (f2 && f2.node && f2.node.team) f2.node.isLoser = true;
       }
 
       const n = { id: `${m.id}_w`, matchId: m.id, round: "r16", isTarget: true, team: winner, angle, ring: 2, t1: f1.winner, t2: f2.winner };
@@ -145,8 +145,8 @@
       const winner = state.picks.qf[m.id];
 
       if (winner) {
-        if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-        if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+        if (f1 && f1.node && f1.node.team) f1.node.isLoser = true;
+        if (f2 && f2.node && f2.node.team) f2.node.isLoser = true;
       }
 
       const n = { id: `${m.id}_w`, matchId: m.id, round: "qf", isTarget: true, team: winner, angle, ring: 3, t1: f1.winner, t2: f2.winner };
@@ -175,8 +175,8 @@
         const winner = state.picks.sf[m.id];
 
         if (winner) {
-          if (f1 && f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-          if (f2 && f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+          if (f1 && f1.node && f1.node.team) f1.node.isLoser = true;
+          if (f2 && f2.node && f2.node.team) f2.node.isLoser = true;
         }
 
         const n = { id: `${m.id}_w`, matchId: m.id, round: "sf", isTarget: true, team: winner, angle, ring: 4, t1: f1.winner, t2: f2.winner };
@@ -210,8 +210,8 @@
         const winner = state.picks.f[m.id];
 
         if (winner) {
-          if (f1.node.team && f1.node.team !== winner) f1.node.isLoser = true;
-          if (f2.node.team && f2.node.team !== winner) f2.node.isLoser = true;
+          if (f1 && f1.node && f1.node.team) f1.node.isLoser = true;
+          if (f2 && f2.node && f2.node.team) f2.node.isLoser = true;
         }
 
         // We can just show the winner at the center, or connect to a tiny ring 5
