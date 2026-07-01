@@ -823,16 +823,19 @@
 
   function mapToApiTLA(internalTLA) {
     const mapping = {
-      "DZA": "ALG",
-      "HRV": "CRO",
-      "DEU": "GER",
-      "NLD": "NED",
-      "PRY": "PAR",
-      "PRT": "POR",
-      "ZAF": "RSA",
-      "CHE": "SUI"
+      "DZA": ["ALG", "DZA"],
+      "HRV": ["CRO", "HRV"],
+      "DEU": ["GER", "DEU"],
+      "NLD": ["NED", "NLD"],
+      "PRY": ["PAR", "PRY"],
+      "PRT": ["POR", "PRT"],
+      "ZAF": ["RSA", "ZAF"],
+      "CHE": ["SUI", "CHE"],
+      "COD": ["COD", "DRC", "CGO", "ZAI"],
+      "USA": ["USA"],
+      "BIH": ["BIH", "BOS"]
     };
-    return mapping[internalTLA] || internalTLA;
+    return mapping[internalTLA] || [internalTLA];
   }
 
   function fetchLiveScores() {
@@ -869,25 +872,27 @@
         const response = await fetch(url);
         const data = await response.json();
         if (!data.matches) return;
-        const knockout = data.matches.filter(m => m.stage !== 'GROUP_STAGE');
+        const knockout = data.matches; // Removed GROUP_STAGE filter to catch all mock matches
         
         let changed = false;
         const activeMatches = getAllActiveMatches();
         
         knockout.forEach(apiMatch => {
-          if (!apiMatch.homeTeam.tla || !apiMatch.awayTeam.tla) return;
+          if (!apiMatch.homeTeam || !apiMatch.awayTeam) return;
           const apiHome = apiMatch.homeTeam.tla;
           const apiAway = apiMatch.awayTeam.tla;
           
+          if (!apiHome || !apiAway) return;
+          
           const matchData = activeMatches.find(am => {
-             const t1 = mapToApiTLA(am.team1);
-             const t2 = mapToApiTLA(am.team2);
-             return (t1 === apiHome && t2 === apiAway) || (t1 === apiAway && t2 === apiHome);
+             const t1Arr = mapToApiTLA(am.team1);
+             const t2Arr = mapToApiTLA(am.team2);
+             return (t1Arr.includes(apiHome) && t2Arr.includes(apiAway)) || (t1Arr.includes(apiAway) && t2Arr.includes(apiHome));
           });
           
           if (matchData) {
              const m = matchData.orig;
-             const isHomeT1 = mapToApiTLA(matchData.team1) === apiHome;
+             const isHomeT1 = mapToApiTLA(matchData.team1).includes(apiHome);
              
              let newStatus = "upcoming";
              if (apiMatch.status === "IN_PLAY" || apiMatch.status === "PAUSED") newStatus = "live";
@@ -901,9 +906,21 @@
              let s1 = m.score1;
              let s2 = m.score2;
              
-             if (isStarted && apiMatch.score && apiMatch.score.fullTime && apiMatch.score.fullTime.home !== null) {
-                 s1 = isHomeT1 ? apiMatch.score.fullTime.home : apiMatch.score.fullTime.away;
-                 s2 = isHomeT1 ? apiMatch.score.fullTime.away : apiMatch.score.fullTime.home;
+             let liveHome = apiMatch.score?.fullTime?.home;
+             let liveAway = apiMatch.score?.fullTime?.away;
+             
+             if (liveHome === undefined || liveHome === null) {
+                 liveHome = apiMatch.score?.regularTime?.home;
+                 liveAway = apiMatch.score?.regularTime?.away;
+             }
+             if (liveHome === undefined || liveHome === null) {
+                 liveHome = apiMatch.score?.halfTime?.home;
+                 liveAway = apiMatch.score?.halfTime?.away;
+             }
+             
+             if (isStarted && liveHome !== undefined && liveHome !== null) {
+                 s1 = isHomeT1 ? liveHome : liveAway;
+                 s2 = isHomeT1 ? liveAway : liveHome;
                  
                  if (apiMatch.score.duration === "PENALTY_SHOOTOUT" && apiMatch.score.penalties) {
                     const ap1 = isHomeT1 ? apiMatch.score.penalties.home : apiMatch.score.penalties.away;
