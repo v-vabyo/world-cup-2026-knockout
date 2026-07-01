@@ -1134,8 +1134,6 @@
       // For Final, wait a bit longer to enjoy the confetti
       await simulateRound(F_BRACKET, 4, state.picks.f, getSFWinner);
       await new Promise(r => setTimeout(r, 1000));
-
-      showToast("Simulasi selesai!");
     }
 
     document.getElementById("btn-simulate")?.addEventListener("click", () => {
