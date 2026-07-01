@@ -880,19 +880,6 @@
             console.warn("No matches array in API response:", data);
             return;
         }
-        
-        // --- DEBUG OVERLAY ---
-        let debugDiv = document.getElementById("debug-api");
-        if (!debugDiv) {
-            debugDiv = document.createElement("div");
-            debugDiv.id = "debug-api";
-            debugDiv.style = "position:fixed;top:10px;right:10px;background:rgba(0,0,0,0.8);color:lime;padding:10px;z-index:9999;max-height:80vh;overflow:auto;font-family:monospace;font-size:10px;pointer-events:none;";
-            document.body.appendChild(debugDiv);
-        }
-        debugDiv.innerHTML = "API Matches: " + data.matches.length + "<br/>" + data.matches.map(m => 
-            `> ${m.homeTeam?.name} vs ${m.awayTeam?.name} | ${m.status} | [${m.homeTeam?.tla} - ${m.awayTeam?.tla}]`
-        ).join("<br/>");
-        // ---------------------
 
         const knockout = data.matches;
         
@@ -931,7 +918,7 @@
              const isHomeT1 = t1Arr.includes(apiHomeTLA) || (apiHomeName && (apiHomeName.includes(n1) || n1.includes(apiHomeName)));
              
              let newStatus = "upcoming";
-             if (apiMatch.status === "IN_PLAY" || apiMatch.status === "PAUSED") newStatus = "live";
+             if (apiMatch.status === "IN_PLAY" || apiMatch.status === "PAUSED" || apiMatch.status === "LIVE") newStatus = "live";
              if (apiMatch.status === "FINISHED") newStatus = "finished";
              
              if (newStatus === "upcoming" && m.status === "finished") {
