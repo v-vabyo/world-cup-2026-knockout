@@ -25,8 +25,8 @@ Since this project uses a Vercel serverless function for API calls, running it r
 ### Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/v-vabyo/WorldCup2026Bracket.git
-   cd WorldCup2026Bracket
+   git clone https://github.com/v-vabyo/world-cup-2026-knockout.git
+   cd world-cup-2026-knockout
    ```
 
 2. To run locally, you can use any simple HTTP server (like VS Code Live Server, or Python's HTTP module):
