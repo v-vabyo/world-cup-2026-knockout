@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     // In production, the API Key should be set in Vercel Environment Variables
     const apiKey = process.env.FOOTBALL_API_KEY;
     
-    const apiRes = await fetch('https://api.football-data.org/v4/matches', {
+    const apiRes = await fetch('https://api.football-data.org/v4/competitions/WC/matches', {
       headers: {
         'X-Auth-Token': apiKey
       }
