@@ -877,8 +877,8 @@
           buildBracket();
         }
       } catch (err) {
-        console.error("API Fetch Error:", err);
-        showToast("Error: API gagal diakses. Pastikan Anda membukanya via http://localhost (Live Server), bukan file:///");
+        console.warn("API Fetch Error:", err);
+        // showToast("Error: API gagal diakses. Pastikan Anda membukanya via http://localhost (Live Server), bukan file:///");
       }
     };
     
