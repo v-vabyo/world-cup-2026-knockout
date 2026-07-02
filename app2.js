@@ -621,54 +621,52 @@
          const fly = document.createElement("img");
          fly.src = flagSvg(sourceNode.team);
          fly.className = "flag-fly";
-         document.body.appendChild(fly);
+         fly.style.position = "absolute";
+         fly.style.transform = "translate(-50%, -50%)";
+         arenaEl.appendChild(fly);
          
          const size = arenaEl.clientWidth;
          const cx = size / 2;
          const cy = size / 2;
          const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
-         const arenaRect = arenaEl.getBoundingClientRect();
          
-         const flyTo = (x, y, w, h, duration) => {
+         const flyTo = (x, y, sizePx, duration) => {
             return new Promise(resolve => {
                fly.style.transition = `all ${duration}ms linear`;
                fly.style.left = x + "px";
                fly.style.top = y + "px";
-               fly.style.width = w + "px";
-               fly.style.height = h + "px";
+               fly.style.width = sizePx + "px";
+               fly.style.height = sizePx + "px";
                setTimeout(resolve, duration + 20);
             });
          };
          
          let currentIdx = path.length - 1;
-         const startRect = path[currentIdx].el.getBoundingClientRect();
-         fly.style.left = startRect.left + "px";
-         fly.style.top = startRect.top + "px";
-         fly.style.width = startRect.width + "px";
-         fly.style.height = startRect.height + "px";
+         const startEl = path[currentIdx].el;
+         fly.style.left = startEl.style.left;
+         fly.style.top = startEl.style.top;
+         fly.style.width = startEl.clientWidth + "px";
+         fly.style.height = startEl.clientHeight + "px";
          fly.offsetHeight; 
          
          while (currentIdx >= 0) {
             const fromData = path[currentIdx];
-            const toData = currentIdx > 0 ? path[currentIdx - 1] : { ring: sourceNode.ring, el: srcEl };
+            const toData = currentIdx > 0 ? path[currentIdx - 1] : { ring: sourceNode.ring, el: srcEl.parentElement };
             
-            const fromRect = fromData.el.getBoundingClientRect();
-            const toRect = toData.el.getBoundingClientRect();
+            const toX = parseFloat(toData.el.style.left);
+            const toY = parseFloat(toData.el.style.top);
             
-            const midWidth = (fromRect.width + toRect.width) / 2;
-            const midHeight = (fromRect.height + toRect.height) / 2;
+            const midSize = (fromData.el.clientWidth + toData.el.clientWidth) / 2;
             
             if (fromData.ring < 5) {
                const targetAngle = parseFloat(fromData.el.dataset.angle);
                const midR = (radii[toData.ring] + radii[fromData.ring]) / 2;
                const jxLocal = posOnCircle(cx, cy, midR, targetAngle);
-               const jxCenterX = arenaRect.left + jxLocal.x;
-               const jxCenterY = arenaRect.top + jxLocal.y;
                
-               await flyTo(jxCenterX - midWidth/2, jxCenterY - midHeight/2, midWidth, midHeight, 150);
+               await flyTo(jxLocal.x, jxLocal.y, midSize, 150);
             }
             
-            await flyTo(toRect.left, toRect.top, toRect.width, toRect.height, 150);
+            await flyTo(toX, toY, toData.el.clientWidth, 150);
             
             currentIdx--;
          }
@@ -751,13 +749,13 @@
 
     // Animate Forward
     const animateForward = async () => {
-      const flyTo = (x, y, w, h, duration) => {
+      const flyTo = (x, y, sizePx, duration) => {
          return new Promise(resolve => {
             fly.style.transition = `all ${duration}ms linear`;
             fly.style.left = x + "px";
             fly.style.top = y + "px";
-            fly.style.width = w + "px";
-            fly.style.height = h + "px";
+            fly.style.width = sizePx + "px";
+            fly.style.height = sizePx + "px";
             setTimeout(resolve, duration + 20);
          });
       };
@@ -765,39 +763,34 @@
       const fly = document.createElement("img");
       fly.src = flagSvg(sourceNode.team);
       fly.className = "flag-fly";
-      document.body.appendChild(fly);
+      fly.style.position = "absolute";
+      fly.style.transform = "translate(-50%, -50%)";
+      arenaEl.appendChild(fly);
       
-      fly.style.left = srcRect.left + "px";
-      fly.style.top = srcRect.top + "px";
-      fly.style.width = srcRect.width + "px";
-      fly.style.height = srcRect.height + "px";
+      const sourceParent = srcEl.parentElement;
+      fly.style.left = sourceParent.style.left;
+      fly.style.top = sourceParent.style.top;
+      fly.style.width = sourceParent.clientWidth + "px";
+      fly.style.height = sourceParent.clientHeight + "px";
       fly.offsetHeight; // Force reflow
+
+      const size = arenaEl.clientWidth;
+      const cx = size / 2;
+      const cy = size / 2;
+      const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
 
       if (targetRing < 5) {
         const targetAngle = parseFloat(targetEl.dataset.angle);
-        const size = arenaEl.clientWidth;
-        const cx = size / 2;
-        const cy = size / 2;
-        const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
         const midR = (radii[sourceNode.ring] + radii[targetRing]) / 2;
         const jxLocal = posOnCircle(cx, cy, midR, targetAngle);
         
-        const arenaRect = arenaEl.getBoundingClientRect();
-        const jxCenterX = arenaRect.left + jxLocal.x;
-        const jxCenterY = arenaRect.top + jxLocal.y;
-        
-        const midWidth = (srcRect.width + targetRect.width) / 2;
-        const midHeight = (srcRect.height + targetRect.height) / 2;
+        const midSize = (sourceParent.clientWidth + targetEl.clientWidth) / 2;
 
-        await flyTo(jxCenterX - midWidth / 2, jxCenterY - midHeight / 2, midWidth, midHeight, 150);
-        await flyTo(targetRect.left, targetRect.top, targetRect.width, targetRect.height, 150);
+        await flyTo(jxLocal.x, jxLocal.y, midSize, 150);
+        await flyTo(parseFloat(targetEl.style.left), parseFloat(targetEl.style.top), targetEl.clientWidth, 150);
       } else {
-        const arenaRect = arenaEl.getBoundingClientRect();
-        const cx = arenaRect.left + arenaEl.clientWidth / 2;
-        const cy = arenaRect.top + arenaEl.clientHeight / 2;
-        
-        await flyTo(cx - targetRect.width / 2, cy - targetRect.height / 2, targetRect.width, targetRect.height, 200);
-        await flyTo(targetRect.left, targetRect.top, targetRect.width, targetRect.height, 150);
+        await flyTo(cx, cy, targetEl.clientWidth, 200);
+        await flyTo(parseFloat(targetEl.style.left), parseFloat(targetEl.style.top), targetEl.clientWidth, 150);
         fly.style.transform = "translate(-50%, -50%) scale(1.5)";
       }
       
