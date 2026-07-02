@@ -630,43 +630,41 @@
          const cy = size / 2;
          const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
          
-         const flyTo = (x, y, sizePx, duration) => {
-            return new Promise(resolve => {
-               fly.style.transition = `all ${duration}ms linear`;
-               fly.style.left = x + "px";
-               fly.style.top = y + "px";
-               fly.style.width = sizePx + "px";
-               fly.style.height = sizePx + "px";
-               setTimeout(resolve, duration + 20);
-            });
-         };
-         
          let currentIdx = path.length - 1;
-         const startEl = path[currentIdx].el;
-         fly.style.left = startEl.style.left;
-         fly.style.top = startEl.style.top;
-         fly.style.width = startEl.clientWidth + "px";
-         fly.style.height = startEl.clientHeight + "px";
-         fly.offsetHeight; 
          
          while (currentIdx >= 0) {
             const fromData = path[currentIdx];
             const toData = currentIdx > 0 ? path[currentIdx - 1] : { ring: sourceNode.ring, el: srcEl.parentElement };
             
+            const fromX = parseFloat(fromData.el.style.left);
+            const fromY = parseFloat(fromData.el.style.top);
             const toX = parseFloat(toData.el.style.left);
             const toY = parseFloat(toData.el.style.top);
-            
             const midSize = (fromData.el.clientWidth + toData.el.clientWidth) / 2;
+            
+            let keyframes = [];
+            let duration = 150;
             
             if (fromData.ring < 5) {
                const targetAngle = parseFloat(fromData.el.dataset.angle);
                const midR = (radii[toData.ring] + radii[fromData.ring]) / 2;
                const jxLocal = posOnCircle(cx, cy, midR, targetAngle);
                
-               await flyTo(jxLocal.x, jxLocal.y, midSize, 150);
+               keyframes = [
+                 { left: fromX + "px", top: fromY + "px", width: fromData.el.clientWidth + "px", height: fromData.el.clientHeight + "px" },
+                 { left: jxLocal.x + "px", top: jxLocal.y + "px", width: midSize + "px", height: midSize + "px" },
+                 { left: toX + "px", top: toY + "px", width: toData.el.clientWidth + "px", height: toData.el.clientHeight + "px" }
+               ];
+               duration = 300;
+            } else {
+               keyframes = [
+                 { left: fromX + "px", top: fromY + "px", width: fromData.el.clientWidth + "px", height: fromData.el.clientHeight + "px" },
+                 { left: toX + "px", top: toY + "px", width: toData.el.clientWidth + "px", height: toData.el.clientHeight + "px" }
+               ];
             }
             
-            await flyTo(toX, toY, toData.el.clientWidth, 150);
+            const animation = fly.animate(keyframes, { duration, easing: 'linear', fill: 'forwards' });
+            await animation.finished;
             
             currentIdx--;
          }
@@ -749,17 +747,6 @@
 
     // Animate Forward
     const animateForward = async () => {
-      const flyTo = (x, y, sizePx, duration) => {
-         return new Promise(resolve => {
-            fly.style.transition = `all ${duration}ms linear`;
-            fly.style.left = x + "px";
-            fly.style.top = y + "px";
-            fly.style.width = sizePx + "px";
-            fly.style.height = sizePx + "px";
-            setTimeout(resolve, duration + 20);
-         });
-      };
-
       const fly = document.createElement("img");
       fly.src = flagSvg(sourceNode.team);
       fly.className = "flag-fly";
@@ -768,11 +755,6 @@
       arenaEl.appendChild(fly);
       
       const sourceParent = srcEl.parentElement;
-      fly.style.left = sourceParent.style.left;
-      fly.style.top = sourceParent.style.top;
-      fly.style.width = sourceParent.clientWidth + "px";
-      fly.style.height = sourceParent.clientHeight + "px";
-      fly.offsetHeight; // Force reflow
 
       const size = arenaEl.clientWidth;
       const cx = size / 2;
@@ -786,11 +768,23 @@
         
         const midSize = (sourceParent.clientWidth + targetEl.clientWidth) / 2;
 
-        await flyTo(jxLocal.x, jxLocal.y, midSize, 150);
-        await flyTo(parseFloat(targetEl.style.left), parseFloat(targetEl.style.top), targetEl.clientWidth, 150);
+        const keyframes = [
+          { left: sourceParent.style.left, top: sourceParent.style.top, width: sourceParent.clientWidth + "px", height: sourceParent.clientHeight + "px" },
+          { left: jxLocal.x + "px", top: jxLocal.y + "px", width: midSize + "px", height: midSize + "px" },
+          { left: targetEl.style.left, top: targetEl.style.top, width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" }
+        ];
+        
+        const animation = fly.animate(keyframes, { duration: 300, easing: 'linear', fill: 'forwards' });
+        await animation.finished;
       } else {
-        await flyTo(cx, cy, targetEl.clientWidth, 200);
-        await flyTo(parseFloat(targetEl.style.left), parseFloat(targetEl.style.top), targetEl.clientWidth, 150);
+        const keyframes = [
+          { left: sourceParent.style.left, top: sourceParent.style.top, width: sourceParent.clientWidth + "px", height: sourceParent.clientHeight + "px" },
+          { left: cx + "px", top: cy + "px", width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" },
+          { left: targetEl.style.left, top: targetEl.style.top, width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" }
+        ];
+        
+        const animation = fly.animate(keyframes, { duration: 350, easing: 'linear', fill: 'forwards' });
+        await animation.finished;
         fly.style.transform = "translate(-50%, -50%) scale(1.5)";
       }
       
