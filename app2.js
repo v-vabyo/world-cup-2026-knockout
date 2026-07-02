@@ -416,7 +416,7 @@
          const len = p.getTotalLength();
          p.style.setProperty('--path-length', len);
          const r1 = parseInt(p.getAttribute('data-r1') || "0");
-         const delay = (5 - r1) * 1.0;
+         const delay = (4 - r1) * 1.0;
          p.style.animationDelay = delay + 's';
          p.classList.add('animate-in');
        });
@@ -424,7 +424,7 @@
        const dots = arenaEl.querySelectorAll('.connector-dot');
        dots.forEach(d => {
          const r1 = parseInt(d.getAttribute('data-r1') || "0");
-         const delay = ((5 - r1) * 1.0) + 0.5; // Halfway through the line drawing
+         const delay = ((4 - r1) * 1.0) + 0.5; // Halfway through the line drawing
          // Since dots use CSS transitions instead of keyframes now, we use setTimeout to add the class
          setTimeout(() => {
            if (wrap.classList.contains("arena-animating")) d.classList.add('animate-in');
