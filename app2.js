@@ -86,7 +86,7 @@
     const ring1 = [];
     ring0.forEach(({ m, n1, n2 }, i) => {
       const angle = (n1.angle + n2.angle) / 2;
-      const winner = m.winner || state.picks.r32[m.id];
+      const winner = state.picks.r32[m.id] || m.winner;
       
       if (winner) {
         if (n1.team) n1.isLoser = true;
@@ -1041,11 +1041,12 @@
           }
           buildBracket();
         }
+        isInitialLoad = false;
       } catch (err) {
         console.warn("API Fetch Error:", err);
-        showToast("⚠️ Vercel API Error: Pastikan API Key tersimpan di Vercel, dan Repo tersinkronisasi!");
         if (isInitialLoad) {
            buildBracket();
+           isInitialLoad = false;
         }
       }
     };
