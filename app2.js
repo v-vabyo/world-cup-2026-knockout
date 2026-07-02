@@ -1048,15 +1048,20 @@
           }
         });
         
-        if (changed) {
-          try {
-            localStorage.setItem('worldcup_live', JSON.stringify(MATCHES_R32));
-          } catch(e) {}
+        if (changed || isInitialLoad) {
+          if (changed) {
+            try {
+              localStorage.setItem('worldcup_live', JSON.stringify(MATCHES_R32));
+            } catch(e) {}
+          }
           buildBracket();
         }
       } catch (err) {
         console.warn("API Fetch Error:", err);
         showToast("⚠️ Vercel API Error: Pastikan API Key tersimpan di Vercel, dan Repo tersinkronisasi!");
+        if (isInitialLoad) {
+           buildBracket();
+        }
       }
     };
     
@@ -1208,7 +1213,6 @@
       resizeTimer = setTimeout(buildBracket, 200);
     });
 
-    buildBracket();
     fetchLiveScores();
   }
 
