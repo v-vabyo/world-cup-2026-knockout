@@ -416,7 +416,7 @@
          const len = p.getTotalLength();
          p.style.setProperty('--path-length', len);
          const r1 = parseInt(p.getAttribute('data-r1') || "0");
-         const delay = (5 - r1) * 0.4;
+         const delay = (5 - r1) * 0.8;
          p.style.animationDelay = delay + 's';
          p.classList.add('animate-in');
        });
@@ -424,7 +424,7 @@
        const dots = arenaEl.querySelectorAll('.connector-dot');
        dots.forEach(d => {
          const r1 = parseInt(d.getAttribute('data-r1') || "0");
-         const delay = ((5 - r1) * 0.4) + 0.3;
+         const delay = ((5 - r1) * 0.8) + 0.6;
          d.style.animationDelay = delay + 's';
          d.classList.add('animate-in');
        });
@@ -432,7 +432,7 @@
        const nodes = arenaEl.querySelectorAll('.team-node');
        nodes.forEach(n => {
          const ring = parseInt(n.getAttribute('data-ring') || "0");
-         const delay = ((5 - ring) * 0.4);
+         const delay = ((5 - ring) * 0.8);
          n.style.animationDelay = delay + 's';
          n.classList.add('animate-in');
        });
@@ -446,7 +446,7 @@
        setTimeout(() => {
          wrap.classList.remove("arena-animating");
          arenaEl.querySelectorAll('.animate-in').forEach(el => el.classList.remove('animate-in'));
-       }, 3000);
+       }, 5500);
        
        isInitialLoad = false;
     }

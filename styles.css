@@ -637,7 +637,7 @@ body {
 }
 
 .arena-animating .team-node.animate-in {
-  animation: nodePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: nodePopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes nodePopIn {
@@ -653,7 +653,7 @@ body {
 }
 
 .arena-animating .trophy-center.animate-in {
-  animation: trophyPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: trophyPopIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes trophyPopIn {
@@ -670,7 +670,7 @@ body {
 
 .arena-animating .connector.animate-in {
   opacity: 1;
-  animation: drawPath 0.6s ease-out forwards;
+  animation: drawPath 1.2s ease-out forwards;
 }
 
 @keyframes drawPath {
@@ -687,7 +687,7 @@ body {
 }
 
 .arena-animating .connector-dot.animate-in {
-  animation: dotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: dotPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes dotPop {
