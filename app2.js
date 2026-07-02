@@ -1040,6 +1040,7 @@
             } catch(e) {}
           }
           buildBracket();
+          updateLivePanel();
         }
         isInitialLoad = false;
       } catch (err) {
