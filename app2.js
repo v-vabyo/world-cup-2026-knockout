@@ -628,7 +628,7 @@
          const size = arenaEl.clientWidth;
          const cx = size / 2;
          const cy = size / 2;
-         const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
+         const radii = [size * 0.46, size * 0.38, size * 0.30, size * 0.22, size * 0.13, 0];
          
          let currentIdx = path.length - 1;
          
@@ -765,7 +765,7 @@
       const size = arenaEl.clientWidth;
       const cx = size / 2;
       const cy = size / 2;
-      const radii = [size*0.46, size*0.37, size*0.28, size*0.19, size*0.10, 0];
+      const radii = [size * 0.46, size * 0.38, size * 0.30, size * 0.22, size * 0.13, 0];
 
       if (targetRing < 5) {
         const targetAngle = parseFloat(targetEl.dataset.angle);
@@ -790,17 +790,10 @@
       } else {
         const kf1 = [
           { left: sourceParent.style.left, top: sourceParent.style.top, width: sourceParent.clientWidth + "px", height: sourceParent.clientHeight + "px" },
-          { left: cx + "px", top: cy + "px", width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" }
-        ];
-        const anim1 = fly.animate(kf1, { duration: 200, easing: 'linear', fill: 'forwards' });
-        await anim1.finished;
-        
-        const kf2 = [
-          { left: cx + "px", top: cy + "px", width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" },
           { left: targetEl.style.left, top: targetEl.style.top, width: targetEl.clientWidth + "px", height: targetEl.clientHeight + "px" }
         ];
-        const anim2 = fly.animate(kf2, { duration: 150, easing: 'linear', fill: 'forwards' });
-        await anim2.finished;
+        const anim1 = fly.animate(kf1, { duration: 350, easing: 'linear', fill: 'forwards' });
+        await anim1.finished;
         fly.style.transform = "translate(-50%, -50%) scale(1.5)";
       }
       
