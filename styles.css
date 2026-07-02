@@ -675,13 +675,23 @@ body {
 
 .arena-animating .connector.animate-in {
   opacity: 1;
-  animation: drawPath 1.2s ease-out forwards;
+  animation: drawPath 1.0s linear forwards;
 }
 
 @keyframes drawPath {
   to {
     stroke-dashoffset: 0;
   }
+}
+
+/* Branching dots fade in */
+.arena-animating .connector-dot {
+  opacity: 0;
+}
+
+.arena-animating .connector-dot.animate-in {
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 

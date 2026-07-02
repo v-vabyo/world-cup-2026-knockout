@@ -416,15 +416,25 @@
          const len = p.getTotalLength();
          p.style.setProperty('--path-length', len);
          const r1 = parseInt(p.getAttribute('data-r1') || "0");
-         const delay = (5 - r1) * 0.8;
+         const delay = (5 - r1) * 1.0;
          p.style.animationDelay = delay + 's';
          p.classList.add('animate-in');
+       });
+       
+       const dots = arenaEl.querySelectorAll('.connector-dot');
+       dots.forEach(d => {
+         const r1 = parseInt(d.getAttribute('data-r1') || "0");
+         const delay = ((5 - r1) * 1.0) + 0.5; // Halfway through the line drawing
+         // Since dots use CSS transitions instead of keyframes now, we use setTimeout to add the class
+         setTimeout(() => {
+           if (wrap.classList.contains("arena-animating")) d.classList.add('animate-in');
+         }, delay * 1000);
        });
 
        const nodes = arenaEl.querySelectorAll('.team-node');
        nodes.forEach(n => {
          const ring = parseInt(n.getAttribute('data-ring') || "0");
-         const delay = ((5 - ring) * 0.8);
+         const delay = ((5 - ring) * 1.0);
          n.style.animationDelay = delay + 's';
          n.classList.add('animate-in');
        });
@@ -438,7 +448,7 @@
        setTimeout(() => {
          wrap.classList.remove("arena-animating");
          arenaEl.querySelectorAll('.animate-in').forEach(el => el.classList.remove('animate-in'));
-       }, 5500);
+       }, 6500);
        
        isInitialLoad = false;
     }
