@@ -625,3 +625,72 @@ body {
     transform: translateY(20px);
   }
 }
+
+/* ============================================================
+   ENTRY ANIMATION (CENTER-OUT)
+   ============================================================ */
+
+/* Node animations */
+.arena-animating .team-node {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.arena-animating .team-node.animate-in {
+  animation: nodePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes nodePopIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Center Trophy animation */
+.arena-animating .trophy-center {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+.arena-animating .trophy-center.animate-in {
+  animation: trophyPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes trophyPopIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* SVG Line animations */
+.arena-animating .connector {
+  stroke-dasharray: var(--path-length);
+  stroke-dashoffset: calc(var(--path-length) * -1); /* Start from inner, draw outward */
+  opacity: 0;
+}
+
+.arena-animating .connector.animate-in {
+  opacity: 1;
+  animation: drawPath 0.6s ease-out forwards;
+}
+
+@keyframes drawPath {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Branching dots animation */
+.arena-animating .connector-dot {
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+}
+
+.arena-animating .connector-dot.animate-in {
+  animation: dotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dotPop {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}

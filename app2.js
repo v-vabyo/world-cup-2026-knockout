@@ -8,6 +8,8 @@
   // ================================================================
   // STATE
   // ================================================================
+  let isInitialLoad = true;
+  
   const state = {
     picks: {
       r32: {}, // matchId -> teamCode
@@ -241,6 +243,7 @@
 
       const path = document.createElementNS(ns, "path");
       path.setAttribute("class", `connector${e.active ? " connector--active" : ""}`);
+      path.setAttribute("data-r1", e.r1);
 
       if (e.r2 === 5) {
         // Straight line to center for the final winner
@@ -261,6 +264,7 @@
         dot.setAttribute("cy", jx.y);
         dot.setAttribute("r", 2.5);
         dot.setAttribute("class", `connector-dot${e.active ? " connector-dot--active" : ""}`);
+        dot.setAttribute("data-r1", e.r1);
         svg.appendChild(dot);
       }
     });
@@ -399,6 +403,53 @@
       }
       arenaEl.appendChild(el);
     });
+
+    if (isInitialLoad) {
+       const wrap = arenaEl.parentElement;
+       wrap.classList.add("arena-animating");
+       
+       // Trigger reflow to ensure styles are applied before getting lengths
+       void wrap.offsetWidth;
+
+       const paths = arenaEl.querySelectorAll('.connector');
+       paths.forEach(p => {
+         const len = p.getTotalLength();
+         p.style.setProperty('--path-length', len);
+         const r1 = parseInt(p.getAttribute('data-r1') || "0");
+         const delay = (5 - r1) * 0.4;
+         p.style.animationDelay = delay + 's';
+         p.classList.add('animate-in');
+       });
+       
+       const dots = arenaEl.querySelectorAll('.connector-dot');
+       dots.forEach(d => {
+         const r1 = parseInt(d.getAttribute('data-r1') || "0");
+         const delay = ((5 - r1) * 0.4) + 0.3;
+         d.style.animationDelay = delay + 's';
+         d.classList.add('animate-in');
+       });
+
+       const nodes = arenaEl.querySelectorAll('.team-node');
+       nodes.forEach(n => {
+         const ring = parseInt(n.getAttribute('data-ring') || "0");
+         const delay = ((5 - ring) * 0.4);
+         n.style.animationDelay = delay + 's';
+         n.classList.add('animate-in');
+       });
+       
+       const trophyNode = arenaEl.querySelector('.trophy-center');
+       if (trophyNode) {
+         trophyNode.style.animationDelay = '0s';
+         trophyNode.classList.add('animate-in');
+       }
+       
+       setTimeout(() => {
+         wrap.classList.remove("arena-animating");
+         arenaEl.querySelectorAll('.animate-in').forEach(el => el.classList.remove('animate-in'));
+       }, 3000);
+       
+       isInitialLoad = false;
+    }
 
     updateLivePanel();
   }
