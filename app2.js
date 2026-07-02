@@ -1035,7 +1035,8 @@
         if (changed || isInitialLoad) {
           if (changed) {
             try {
-              localStorage.setItem('worldcup_live', JSON.stringify(MATCHES_R32));
+              const allMatches = [...MATCHES_R32, ...R16_BRACKET, ...QF_BRACKET, ...SF_BRACKET, ...(typeof F_BRACKET !== 'undefined' ? F_BRACKET : [])];
+              localStorage.setItem('worldcup_live', JSON.stringify(allMatches));
             } catch(e) {}
           }
           buildBracket();
@@ -1080,7 +1081,8 @@
       const cached = localStorage.getItem('worldcup_live');
       if (cached) {
          const cachedMatches = JSON.parse(cached);
-         MATCHES_R32.forEach(m => {
+         const allMatches = [...MATCHES_R32, ...R16_BRACKET, ...QF_BRACKET, ...SF_BRACKET, ...(typeof F_BRACKET !== 'undefined' ? F_BRACKET : [])];
+         allMatches.forEach(m => {
            const cm = cachedMatches.find(x => x.id === m.id);
            if (cm) {
              m.status = cm.status;
