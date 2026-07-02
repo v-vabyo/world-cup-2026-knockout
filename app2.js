@@ -406,14 +406,23 @@
   function updateLivePanel() {
     if (!livePanel) return;
     
-    let displayMatch = MATCHES_R32.find(m => m.status === 'live');
-    let isLive = true;
+    const allMatches = [...MATCHES_R32, ...R16_BRACKET, ...QF_BRACKET, ...SF_BRACKET];
+    if (typeof F_BRACKET !== 'undefined') allMatches.push(...F_BRACKET);
     
-    if (!displayMatch) {
-       const finished = MATCHES_R32.filter(m => m.status === 'finished');
+    let liveMatches = allMatches.filter(m => m.status === 'live');
+    let isLive = liveMatches.length > 0;
+    let displayMatch = null;
+    
+    if (isLive) {
+       displayMatch = liveMatches.reduce((latest, m) => {
+           return (m.lastUpdated || 0) >= (latest.lastUpdated || 0) ? m : latest;
+       }, liveMatches[0]);
+    } else {
+       const finished = allMatches.filter(m => m.status === 'finished');
        if (finished.length > 0) {
-           displayMatch = finished[finished.length - 1];
-           isLive = false;
+           displayMatch = finished.reduce((latest, m) => {
+               return (m.lastUpdated || 0) >= (latest.lastUpdated || 0) ? m : latest;
+           }, finished[0]);
        }
     }
 
@@ -977,6 +986,7 @@
                 m.penaltyScore1 = p1;
                 m.penaltyScore2 = p2;
                 m.winner = winner;
+                m.lastUpdated = Date.now();
                 
                 if (newStatus === "finished" && winner) {
                    matchData.roundObj[m.id] = winner;
@@ -1039,6 +1049,7 @@
              m.penaltyScore1 = cm.penaltyScore1;
              m.penaltyScore2 = cm.penaltyScore2;
              m.winner = cm.winner;
+             m.lastUpdated = cm.lastUpdated || 0;
            }
          });
       }
